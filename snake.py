@@ -7,7 +7,7 @@ import sys
 
 pygame.init()
 
-window_width, window_height = 800, 800
+window_width, window_height = 1000, 800
 
 pygame.display.set_mode((window_width, window_height), DOUBLEBUF | OPENGL)
 
@@ -15,6 +15,9 @@ glOrtho(0, window_width, 0, window_height, -1, 1)
 glClearColor(0.15, 0.15, 0.15, 1)
 
 menu_font = pygame.font.Font(None, 36)
+game_over_sfx = pygame.mixer.Sound("game_over.mp3")
+bite_sfx = pygame.mixer.Sound("bite.mp3")
+ouch_sfx = pygame.mixer.Sound("ouch.mp3")
 
 gold = (255, 215, 0, 255)
 blue = (36, 128, 219, 255)
@@ -26,9 +29,10 @@ def reset_values():
   pause  = False
   game_over = False
   point_counter = 0
-  snake_position = [100, 50]
-  snake_segments = [[200 - n * 10, 50] for n in range(10)]
-  snake_direction = 1  # 1: right, 2: up, 3: left, 4: down
+  snake_direction = random.sample([1,2,4], 1)[0]
+  snake_position = [random.randint(40, window_width - 40)//20*20, random.randint(40, window_height - 80)//20*20]
+
+  snake_segments = [[snake_position[0] - n * 10, snake_position[1]] for n in range(10)]
   food_segment = [False for _ in range(len(snake_segments))]
   food_position = [window_width / 2, window_height / 2]
   food_spawned = False
@@ -135,6 +139,17 @@ def start_menu():
     pygame.display.flip()
     pygame.time.Clock().tick(10)
 
+def check_food_collision(position, segments):
+  for segment in segments:
+    if (
+      segment[0] + 10 >= position[0] 
+      and segment[0] - 15 <= position[0]
+      and segment[1] + 15 >= position[1] 
+      and segment[1] - 15 <= position[1]
+      ):
+      return True
+  return False
+
 def check_collision(position, segments):
   for segment in segments:
     if (
@@ -149,7 +164,7 @@ def check_collision(position, segments):
 def generate_food_position(segments):
   while True:
     new_food_position = [random.randint(40, window_width - 40)//20*20, random.randint(40, window_height - 80)//20*20]
-    if not check_collision(new_food_position, segments):
+    if not check_food_collision(new_food_position, segments):
       return new_food_position
 
 def game():
@@ -202,15 +217,11 @@ def game():
       elif snake_direction == 4:
         snake_position[1] -= 10
 
-      if (
-        snake_position[0] + 10 >= food_position[0] 
-        and snake_position[0] - 15 < food_position[0]
-        and snake_position[1] + 15 > food_position[1] 
-        and snake_position[1] - 15 < food_position[1]
-      ):
+      if check_food_collision(food_position, [snake_position]):
         point_counter += snake_speed
         food_spawned = False
         food_segment.insert(0, True)
+        bite_sfx.play()
       else:
         snake_segments.pop()
         food_segment.pop()
@@ -224,27 +235,30 @@ def game():
 
       if check_collision(snake_position, snake_segments[1:]):
         game_over = True
+        bite_sfx.play()
+        ouch_sfx.play()
 
       if (
-        snake_position[0] < 20
-        or snake_position[0] >= window_width - 10
-        or snake_position[1] < 20
-        or snake_position[1] >= window_height - 10
+        snake_position[0] <= 20
+        or snake_position[0] >= window_width - 20
+        or snake_position[1] <= 20
+        or snake_position[1] >= window_height - 20
       ):
         game_over = True
+        game_over_sfx.play()
 
       glClear(GL_COLOR_BUFFER_BIT)
       draw_border()
       draw_snake(snake_segments)
       draw_food(food_position)
-      draw_text(f'Your score: {point_counter} ', 750, gold, 550)
+      draw_text(f'Your score: {point_counter} ', 750, gold, 700)
       pygame.display.flip()
       pygame.time.Clock().tick(snake_speed)
     
     draw_border()
     draw_snake(snake_segments)
     draw_food(food_position)
-    draw_text(f'Your score: {point_counter} ', 750, gold, 550)
+    draw_text(f'Your score: {point_counter} ', 750, gold, 700)
     if pause:
       draw_text(' ***Pause*** ', 500, blue)
 
