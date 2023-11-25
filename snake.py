@@ -15,7 +15,6 @@ glOrtho(0, window_width, 0, window_height, -1, 1)
 glClearColor(0.15, 0.15, 0.15, 1)
 
 menu_font = pygame.font.Font(None, 36)
-game_over_sfx = pygame.mixer.Sound("game_over.mp3")
 bite_sfx = pygame.mixer.Sound("bite.mp3")
 ouch_sfx = pygame.mixer.Sound("ouch.mp3")
 
