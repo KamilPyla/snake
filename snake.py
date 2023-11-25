@@ -245,7 +245,6 @@ def game():
       ):
         game_over = True
         ouch_sfx.play()
-        game_over_sfx.play()
 
       glClear(GL_COLOR_BUFFER_BIT)
       draw_border()
