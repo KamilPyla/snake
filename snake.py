@@ -136,7 +136,7 @@ def start_menu():
           sys.exit()
 
     pygame.display.flip()
-    pygame.time.Clock().tick(10)
+    pygame.time.Clock().tick(5)
 
 def check_food_collision(position, segments):
   for segment in segments:
@@ -202,6 +202,16 @@ def game():
             snake_direction = 3
           elif event.key == pygame.K_RIGHT and not snake_direction == 3:
             snake_direction = 1
+          elif event.key == pygame.K_1:
+            snake_speed = 10
+          elif event.key == pygame.K_2:
+            snake_speed = 20
+          elif event.key == pygame.K_3:
+            snake_speed = 30
+          elif event.key == pygame.K_4:
+            snake_speed = 40
+          elif event.key == pygame.K_5:
+            snake_speed = 60
           elif event.key == pygame.K_SPACE:
             pause = True
           elif event.key == pygame.K_ESCAPE:
@@ -261,7 +271,7 @@ def game():
       draw_text(' ***Pause*** ', 500, blue)
 
     pygame.display.flip()
-    pygame.time.Clock().tick(10)
+    pygame.time.Clock().tick(5)
     
     if game_over:
       snake_speed = start_menu()
