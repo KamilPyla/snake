@@ -235,7 +235,6 @@ def game():
 
       if check_collision(snake_position, snake_segments[1:]):
         game_over = True
-        bite_sfx.play()
         ouch_sfx.play()
 
       if (
@@ -245,6 +244,7 @@ def game():
         or snake_position[1] >= window_height - 20
       ):
         game_over = True
+        ouch_sfx.play()
         game_over_sfx.play()
 
       glClear(GL_COLOR_BUFFER_BIT)
