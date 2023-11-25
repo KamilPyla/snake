@@ -31,7 +31,7 @@ def reset_values():
   snake_direction = random.sample([1,2,4], 1)[0]
   snake_position = [random.randint(40, window_width - 40)//20*20, random.randint(40, window_height - 80)//20*20]
 
-  snake_segments = [[snake_position[0] - n * 10, snake_position[1]] for n in range(10)]
+  snake_segments = [[snake_position[0] - n * 10, snake_position[1]] for n in range(15)]
   food_segment = [False for _ in range(len(snake_segments))]
   food_position = [window_width / 2, window_height / 2]
   food_spawned = False
