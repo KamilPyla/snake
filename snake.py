@@ -101,7 +101,7 @@ def start_menu():
     global point_counter, gold
 
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-    draw_text("Snake Game", 700)
+    draw_text("Snake", 700)
     draw_text("Select Difficulty:", 500)
     draw_text("1. Easy", 400)
     draw_text("2. Medium", 350)
